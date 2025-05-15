@@ -1,0 +1,10 @@
+python-dotenv
+PyMuPDF==1.23.1
+transformers==4.40.0
+torch>=1.10
+matplotlib
+seaborn
+streamlit
+numpy
+scikit-learn
+-e.
