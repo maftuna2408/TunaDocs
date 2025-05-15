@@ -1,9 +1,12 @@
-# source/summarizer.py
-from transformers import pipeline
+from transformers import AutoTokenizer, pipeline
 
-# HuggingFace summarization modeli (masalan, "t5-small" yoki "facebook/bart-large-cnn")
-summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+model_name = "facebook/bart-large-cnn"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+summarizer = pipeline("summarization", model=model_name, tokenizer=tokenizer)
 
-def summarize_text(text: str, max_length: int = 130, min_length: int = 30) -> str:
-    summary = summarizer(text, max_length=max_length, min_length=min_length, do_sample=False)
-    return summary[0]["summary_text"]
+def summarize_text(text, max_length=150, min_length=40):
+    inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=1024)
+    input_ids = inputs["input_ids"]
+    truncated_text = tokenizer.decode(input_ids[0], skip_special_tokens=True)
+    summary = summarizer(truncated_text, max_length=max_length, min_length=min_length, do_sample=False)
+    return summary[0]['summary_text']
